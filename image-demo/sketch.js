@@ -4,7 +4,7 @@
 let toad;
 
 function preload(){
-  toad = loadImage{"toad.png"}
+  toad = loadImage("toad.png")
 }
 
 function setup() {
