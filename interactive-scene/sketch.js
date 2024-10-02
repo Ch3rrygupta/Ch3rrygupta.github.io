@@ -3,7 +3,7 @@
 // Date
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// In this project I learned how to download sounds from youtube and put them into 
 
 
 function setup() {
@@ -16,14 +16,15 @@ function draw() {
   drawChordButtons()
   drawGuitarStrings()
   
-  
 }
 
+// this will draw the guitar body color and the hole
 function drawGuitarBackground() {
   fill(16,16,16)
   ellipse (300, 210, 220, 190)
 }
 
+// this will draw the guitar strings, from tickest to thinnest
 function drawGuitarStrings() {
   fill (97, 83, 73)
   rect(0, 150, 600, 3)
