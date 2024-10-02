@@ -6,7 +6,7 @@
 // In this project, I learned how to do a lot of things along the way (which are all scattered in comments throughout my code). 
 // However, I would say that the two most difficult things that i learned about were:
 // 1. Vectors and their lengths and directions. 
-// 2. The "class" classification. 
+// 2. The "class" classification and the different functions that come with it
 
 let snake;
 let food;
