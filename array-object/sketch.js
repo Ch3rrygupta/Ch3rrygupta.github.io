@@ -16,12 +16,12 @@ function setup() {
 }
 
 function draw() {
-  background(50);
+  background(100);
   drawTubes();
 }
 
 function drawTubes(){
-  fill(255, 255, 255, 30);
+  fill(255, 255, 255, 50);
   rect(width/9, height/5, 50, 200, 10);
   rect(width/9 *3, height/5, 50, 200, 10);
   rect(width/9 *5, height/5, 50, 200, 10);
