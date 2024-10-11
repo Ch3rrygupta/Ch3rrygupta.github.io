@@ -32,3 +32,7 @@ function drawTubes(){
   rect(width/9 *7, height/5 *3, 50, 200, 10);
 }
 
+function createBalls(){
+  circle();
+}
+
