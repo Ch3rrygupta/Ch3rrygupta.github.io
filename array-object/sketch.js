@@ -33,6 +33,8 @@ function drawTubes(){
 }
 
 function createBalls(){
-  circle();
+  let theBalls = {
+    
+  };
 }
 
