@@ -9,6 +9,8 @@
 - [Perlin Noise Ball](perlin)
 - [Terrain Generation](terrain)
 - [Bubble Object Demo](bubble)
+- [Sound Effects Demo](sound-fx)
+- [Translate and Rotate](rotate)
 
 
 ## Projects 
