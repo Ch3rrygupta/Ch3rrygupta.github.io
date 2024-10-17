@@ -34,7 +34,10 @@ function drawTubes(){
 
 function createBalls(){
   let theBalls = {
-    
+    x: 160,
+    y: 150,
+    radius: 15,
+    alpha: 4, 
   };
 }
 
