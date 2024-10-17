@@ -41,3 +41,11 @@ function createBalls(){
   };
 }
 
+function playSound(){
+  
+}
+
+function preload(){
+
+}
+
