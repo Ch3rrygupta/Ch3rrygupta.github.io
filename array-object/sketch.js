@@ -20,6 +20,8 @@ function draw() {
   drawTubes();
 }
 
+
+// this function will draw the tubes at a specific hieght and width along the screen
 function drawTubes(){
   fill(255, 255, 255, 50);
   rect(width/9, height/5, 50, 200, 10);
@@ -32,6 +34,7 @@ function drawTubes(){
   rect(width/9 *7, height/5 *3, 50, 200, 10);
 }
 
+// function that will create balls in the tubes
 function createBalls(){
   let theBalls = {
     x: 160,
@@ -41,10 +44,13 @@ function createBalls(){
   };
 }
 
+// function that will play a "boop" sound whenever a bal is picked up or dropped into a tube
 function playSound(){
   
 }
 
+
+// function that will load the sound
 function preload(){
 
 }
