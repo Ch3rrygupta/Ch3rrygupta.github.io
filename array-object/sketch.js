@@ -39,7 +39,9 @@ function setup() {
 }
 
 function draw() {
-  background(220);
+  background(230, 250, 255);
+
+  title();
     
   // Draw each glass
   for (let glass of glasses){
@@ -50,6 +52,7 @@ function draw() {
   if (gameWon) {
     displayWinningMessage();
   }
+
 }
 
 function mousePressed() {
@@ -96,11 +99,20 @@ function checkWinCondition() {
 }
 
 function displayWinningMessage() {
-  fill(0);
-  textSize(32);
+  fill(255, 160, 210);
+  textSize(40);
   textAlign(CENTER, CENTER);
-  text("You Won!", width / 2, height / 2);
+  text ("You Won! Refresh to play again :)", width / 2, height / 3 );
 }
+
+function title(){
+  fill(0,154,255);
+  textSize(100);
+  textAlign(CENTER, CENTER);
+  text("🌊WATER SORT🌊", width/2, 100);
+
+}
+
 
 // Glass class to manage water
 class Glass {
