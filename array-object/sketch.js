@@ -3,7 +3,10 @@
 // October 21, 2024
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - class
+
+// How to play:
+// 
 
 
 let glasses = [];
