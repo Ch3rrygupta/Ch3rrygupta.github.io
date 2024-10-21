@@ -12,7 +12,7 @@ let currentGlass = null;
 let gameWon = false;
 
 function setup() {
-    createCanvas(800, 600);
+    createCanvas(900, 600);
     let glassWidth = 100;
     let glassHeight = 200;
     let glassMargin = 20;
