@@ -3,12 +3,19 @@
 // October 21, 2024
 //
 // Extra for Experts:
-// - class
-
-// How to play:
+// - Worked with classes again, something we havent worked with in class yet, I used a my own class to manage the water in the glasses
+// - I also put a for loop inside if a for loop in the checkWinCondition() function, something we are meant to learn in class tomorrow! (October 22nd)
+// - I also learned all about the null variable assignment, and used it along with the currentGlass variable. 
+//   This means that I initialized the variable but didnt assign anything to it, this is how we will select and deselect the glasses during the game!
 // 
 
+// How to play:
+// the goal is to sort and separate the water, so that there isn't more than one color of water in the same glass
+// Click on a glass to select the top water and click on another glass where the 
+//top water is the same color or an empty glass to pour the selected water in!
 
+
+// set some gloal variables
 let glasses = [];
 let colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
 let currentGlass = null;
@@ -29,14 +36,13 @@ function setup() {
   for (let i = 0; i < totalGlasses; i++) {
     let glass = new Glass(startX + i * (glassWidth + glassMargin), height - glassHeight - 50, glassWidth, glassHeight); // Raise glasses by 50 pixels
         
-    // Fill with colored water only for the first five glasses
+    // Fill with colored water only for the first five glasses, having the two empty ones makes it a bit eaier to sort!
     if (i < 5) {
-      for (let j = 0; j < 3; j++) { // Fill with 3 waters each
+      for (let j = 0; j < 3; j++) { // Fill glasses with 3 waters each
         glass.fillWater(random(colors));
       } 
     }
-    
-        
+
     glasses.push(glass);
   }
 }
@@ -59,12 +65,12 @@ function draw() {
 }
 
 function mousePressed() {
-  if (!gameWon) { // Only allow interaction if the game is not won
-    // Check which glass is clicked
+  if (!gameWon) { // Only allow interaction if the game is not won already
+    // Check which of the glasses is clicked
     for (let glass of glasses) {
       if (glass.isMouseOver()) {
         if (currentGlass === null) {
-          currentGlass = glass; // Select the glass
+          currentGlass = glass; // Selecting the glass
         } 
         else {
           // Try to pour water from current glass to the clicked glass
@@ -80,6 +86,7 @@ function mousePressed() {
   }
 }
 
+// function that will check if all the glasses are sorted
 function checkWinCondition() {
   // Check if all glasses are sorted
   let allSorted = true;
@@ -101,6 +108,7 @@ function checkWinCondition() {
   }
 }
 
+// fuction that will tell the player they won
 function displayWinningMessage() {
   fill(255, 160, 210);
   textSize(40);
@@ -108,6 +116,7 @@ function displayWinningMessage() {
   text ("You Won! Refresh to play again :)", width / 2, height / 3 );
 }
 
+// will show the game's name at the top of the screen
 function title(){
   fill(0,154,255);
   textSize(100);
@@ -117,7 +126,7 @@ function title(){
 }
 
 
-// Glass class to manage water
+// Glass class to manage water in glasses
 class Glass {
   constructor(x, y, w, h) {
     this.x = x;
@@ -132,28 +141,31 @@ class Glass {
       this.water.push(color);
     }
   }
-
+  
   draw() {
     fill(255);
     rect(this.x, this.y, this.w, this.h);
     this.drawWater();
   }
-
+  // draw the waters in the glasses
   drawWater() {
     for (let i = 0; i < this.water.length; i++) {
       fill(this.water[i]);
       rect(this.x, this.y + this.h - (i + 1) * (this.h / 5), this.w, this.h / 5);
     }
   }
-
+  
+  // check if the mouse is over any glass
   isMouseOver() {
     return mouseX > this.x && mouseX < this.x + this.w && mouseY > this.y && mouseY < this.y + this.h;
   }
 
+  // check if we are able to pour into this glass
   canPour(fromGlass) {
     return this.water.length < 5 && (this.water.length === 0 || this.water[this.water.length - 1] === fromGlass.water[fromGlass.water.length - 1]);
   }
 
+  // pour the water
   pour(fromGlass) {
     if (fromGlass.water.length > 0) {
       this.fillWater(fromGlass.water.pop());
