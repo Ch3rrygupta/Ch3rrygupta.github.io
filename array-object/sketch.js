@@ -3,8 +3,8 @@
 // October 21, 2024
 //
 // Extra for Experts:
-// - Worked with classes again, something we havent worked with in class yet, I used a my own class to manage the water in the glasses
-// - I also put a for loop inside if a for loop in the checkWinCondition() function, something we are meant to learn in class tomorrow! (October 22nd)
+// - Worked with class again, something we havent worked with in class (I mean at school, not the javascript function lol) yet, I used a my own class to manage the water in the glasses
+// - I also put a for loop inside of a for loop in the checkWinCondition() function, something we are meant to learn in class tomorrow! (October 22nd)
 // - I also learned all about the null variable assignment, and used it along with the currentGlass variable. 
 //   This means that I initialized the variable but didnt assign anything to it, this is how we will select and deselect the glasses during the game!
 // 
@@ -12,10 +12,11 @@
 // How to play:
 // the goal is to sort and separate the water, so that there isn't more than one color of water in the same glass
 // Click on a glass to select the top water and click on another glass where the 
-//top water is the same color or an empty glass to pour the selected water in!
+// top water is the same color or an empty glass to pour the selected water in!
+// you will win once there isn't more than one color in the same glass! 
 
 
-// set some gloal variables
+// set some global variables
 let glasses = [];
 let colors = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
 let currentGlass = null;
