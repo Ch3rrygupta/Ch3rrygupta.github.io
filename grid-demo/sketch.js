@@ -6,8 +6,9 @@
 // - describe what you did to take this project "above and beyond"
 
 let grid;
-const GRID_SIZE = 10;
+const GRID_SIZE = 15;
 let cellSize;
+let shouldToggleNeighbours = true;
 
 function setup() {
   if (windowWidth < windowHeight) {
@@ -25,12 +26,54 @@ function draw() {
   displayGrid();
 }
 
+function windowResized(){
+  if (windowWidth < windowHeight) {
+    resizeCanvas(windowWidth, windowWidth);
+  }
+  else {
+    resizeCanvas(windowHeight, windowHeight);
+  }
+  cellSize = height/GRID_SIZE;
+}
+
+function mousePressed(){
+  let x = Math.floor(mouseX/cellSize);
+  let y = Math.floor(mouseY/cellSize);
+
+  if (shouldToggleNeighbours){
+    toggleCell(x, y);
+    toggleCell(x+1, y);
+    toggleCell(x-1, y);
+    toggleCell (x, y+1) ;
+    toggleCell(x, y-1);
+  }
+
+}
+
+function toggleCell(x, y){
+  // make sure  the cell u are toggleing is in the grid
+
+  if(x >= 0 && y>=0 && x < GRID_SIZE && y< GRID_SIZE) {
+    if (grid[y][x] === 1){
+      grid[y][x] = 0;
+    }
+
+    else {
+      grid[y][x] = 1;
+    }
+  }
+}
+
 function keyPressed() {
   if (key === "r") {
     grid = generateRandomGrid(GRID_SIZE, GRID_SIZE);
   }
   if (key === "e") {
     grid = generateEmptyGrid(GRID_SIZE, GRID_SIZE);
+  }
+
+  if (key === "n"){
+    shouldToggleNeighbours = !shouldToggleNeighbours;
   }
 }
 
