@@ -14,8 +14,10 @@
 - [Grid Demo](grid-demo)
 - [Game of life](game-of-life)
 - [rectangle Grid](rectangle-grid)
+- [Character Grid](character-grid)
 
 
 ## Projects 
 - [Interactive Scene](interactive-scene)
 - [Arrays and Object Notation](array-object)
+- [Grid Based Game](grid-game)
