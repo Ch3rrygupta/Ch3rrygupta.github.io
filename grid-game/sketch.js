@@ -20,3 +20,10 @@ function setup() {
 function draw() {
   background(220);
 }
+
+
+function drawPac(){
+  noStroke();
+  fill("yellow");
+  circle(x, y, 60);
+}
