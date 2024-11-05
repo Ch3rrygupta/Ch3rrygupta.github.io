@@ -60,3 +60,60 @@ function keyPressed() {
     movePac(pac.x - 1, pac.y);
   }
 }
+
+
+class Cell {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.wall = false; //is this cell a wall?
+    this.score = false; //this cell increases the total score?
+    this.power = false; // is this cell a power token?
+    this.time = 0;
+  }
+  
+  show() {
+    if(this.wall === true) {
+      fill(150, 100);
+      rect(this.x, this.y, w, w);
+      this.score = false;
+    }
+    else if(this.score) {
+      fill(225, 120, 0);
+      ellipse(this.x, this.y, w/5);
+    }
+    if(this.power) {
+      fill(225, 120, 0);
+      if(this.time % 45 < 15) {
+        fill(0);
+      }
+      ellipse(this.x, this.y, w/2);
+      this.time++;
+      if(this.time === 4500) {
+        this.time = 0;
+      }
+    }
+  }
+  
+  total() {
+    if(this.score) {
+      let d = dist(pacman.x, pacman.y, this.x, this.y);
+      if(d < w/2) {
+        totalScore++;
+        this.score = false;
+      }
+    }
+    if(this.power) {
+      let d = dist(pacman.x, pacman.y, this.x, this.y);
+      if(d < w/2) {
+        totalScore++;
+        let time = 6000;
+        this.power = false;
+        for(let i = 0; i < ghostNum; i++) {
+          ghosts[i].killable = true;
+          setTimeout(ghostInv, time);
+        }
+      }
+    }
+  }
+}
