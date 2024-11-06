@@ -67,7 +67,7 @@ class Cell {
     this.x = x;
     this.y = y;
     this.wall = false; //is this cell a wall?
-    this.score = false; //this cell increases the total score?
+    this.score = false; // does this cell increase the tootal score?
     this.power = false; // is this cell a power token?
     this.time = 0;
   }
@@ -90,7 +90,7 @@ class Cell {
       ellipse(this.x, this.y, w/2);
       this.time++;
       if(this.time === 4500) {
-        this.time = 0;
+        this.time  = 0;
       }
     }
   }
@@ -100,7 +100,7 @@ class Cell {
       let d = dist(pacman.x, pacman.y, this.x, this.y);
       if(d < w/2) {
         totalScore++;
-        this.score = false;
+        this.score  = false;
       }
     }
     if(this.power) {
@@ -112,6 +112,57 @@ class Cell {
         for(let i = 0; i < ghostNum; i++) {
           ghosts[i].killable = true;
           setTimeout(ghostInv, time);
+        }
+      }
+    }
+  }
+}
+
+
+class Ghost {
+  constructor(x, y, diameter) {
+    this.i = 0;
+    this.x = x;
+    this.y = y;
+    this.d = diameter;
+    this.r1 = 0;
+    this.speedX = 0;
+    this.speedY = 0;
+    this.killable = false;
+    this.alive = true;
+    this.neighbors = [];
+    this.i++;
+  }
+  
+  show(r, g, b) {
+    if(this.alive === false) {
+    }
+    else if(this.killable) {
+      fill(0, 0, 255);
+      rect(this.x, this.y, this.d, this.d, 5);
+    }
+    else {
+      fill(r, g, b);
+      rect(this.x, this.y, this.d, this.d, 5);
+    }
+  }
+  
+  kill() {
+    let d = dist(pacman.x, pacman.y, this.x, this.y);
+    if(d < w/2) {
+      if(this.alive) {
+        if(this.killable) {
+          this.alive = false;
+          totalScore += 50;
+          // YUP SO PLS FIX  THIS PART BECAUSE IM CRASHING OUT RNNNN
+          setTimeout(() => { 
+            this.x = floor(random(11, 15))*w; 
+            this.y = floor(random(9, 11))*w;
+            this.alive = true;
+          }, 7000); //IM BEGGING PLSSSSSS FIX GIRL.
+        } 
+        else {
+          deathPac(); // awwwww bye pac :( #byeho
         }
       }
     }
