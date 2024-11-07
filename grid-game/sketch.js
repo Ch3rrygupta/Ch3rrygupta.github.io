@@ -37,11 +37,12 @@ function draw() {
   background(220);
 }
 
+// load the pacman image
 function preload(){
   pacImg = loadImage("pac.img");
 }
 
-
+// will see if the keys are pressed and will help pac move
 function keyPressed() {
   if (key === "w") {
     //move up
@@ -61,7 +62,7 @@ function keyPressed() {
   }
 }
 
-
+// the class for the the cells, each "square" counts as one cell 
 class Cell {
   constructor(x, y) {
     this.x = x;
@@ -118,7 +119,7 @@ class Cell {
   }
 }
 
-
+// the class for the ghosts
 class Ghost {
   constructor(x, y, diameter) {
     this.i = 0;
@@ -146,6 +147,7 @@ class Ghost {
       rect(this.x, this.y, this.d, this.d, 5);
     }
   }
+  
   
   kill() {
     let d = dist(pacman.x, pacman.y, this.x, this.y);
