@@ -13,6 +13,11 @@
 // the player also has to avoid thhe ghosts by moving around
 
 
+// extra for experts:
+// for my extra for experts I made class and played around with that. we also got shown bthis in class recentkly but I 
+// coded most of the class stuff before ot was shown in class and I've been playinf aroufdn wiht it in my other projects as well.
+
+
 let pac;
 let grid = [];
 let rows, cols;
