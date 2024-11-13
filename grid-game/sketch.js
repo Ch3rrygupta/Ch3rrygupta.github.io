@@ -45,6 +45,7 @@ function draw() {
 // load the pacman image
 function preload(){
   pacImg = loadImage("pac.img");
+  font = loadFont("Pacmania.otf");
 }
 
 // will see if the keys are pressed and will help pac move
