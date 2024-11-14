@@ -175,4 +175,197 @@ class Ghost {
       }
     }
   }
+
+  move() {  
+    if(this.x % w === 0 && this.y % w === 0){
+      checkNeighbors(this.x, this.y, this.neighbors);
+      //it's probably a dumb way of making the ghosts move, but I divided the move function into all the possible neighbors cells of the ghost
+      //if all neighbors are walls (technically this is not needed)
+      if(this.neighbors[0] && this.neighbors[1] && this.neighbors[2] && this.neighbors[3]) {
+        this.speedX = 0;
+        this.speedY = 0;
+      //if 3 neighbors are walls (technically this is not needed)
+      } else if(this.neighbors[0] && this.neighbors[1] && this.neighbors[2]) {
+        this.speedX = -w/10;
+        this.speedY = 0;
+      } 
+      else if(this.neighbors[0] && this.neighbors[1] && this.neighbors[3]) {
+        this.speedX = 0;
+        this.speedY = w/10;
+      } 
+      else if(this.neighbors[0] && this.neighbors[2] && this.neighbors[3]) {
+        this.speedX = w/10;
+        this.speedY = 0;
+      } 
+      else if(this.neighbors[3] && this.neighbors[1] && this.neighbors[2]) {
+        this.speedX = 0;
+        this.speedY = -w/10;
+        //if 2 neighbors are walls
+      } 
+      else if(this.neighbors[0] && this.neighbors[1]) {
+        this.r = random(1);
+        if(this.r < 0.5) {
+          this.speedX = -w/10;
+          this.speedY = 0;
+        } 
+        else {
+          this.speedX = 0;
+          this.speedY = w/10;
+        }
+      } 
+      else if(this.neighbors[0] && this.neighbors[2]) {
+        this.r = random(1);
+        //if the ghost is between 2 parallel walls, theres a little chance of 5% that it will change its direction
+        if(this.r < 0.05) {
+          this.speedX = w/10;
+          this.speedY = 0;
+        } 
+        else if(this.r < 0.1) {
+          this.speedX = -w/10;
+          this.speedY = 0;
+        }
+      } 
+      else if(this.neighbors[0] && this.neighbors[3]) {
+        this.r = random(1);
+        if(this.r < 0.5) {
+          this.speedX = w/10;
+          this.speedY = 0;
+        } 
+        else {
+          this.speedX = 0;
+          this.speedY = w/10;
+        }
+      } 
+      else if(this.neighbors[1] && this.neighbors[2]) {
+        this.r = random(1);
+        if(this.r < 0.5) {
+          this.speedX = 0;
+          this.speedY = -w/10;
+        } 
+        else {
+          this.speedX = -w/10;
+          this.speedY = 0;
+        }
+      } 
+      else if(this.neighbors[1] && this.neighbors[3]) {
+        this.r = random(1);
+        //if the ghost is between 2 parallel walls, theres a little chance of 5% that it will change its direction
+        if(this.r < 0.05) {
+          this.speedX = 0;
+          this.speedY = w/10;
+        } 
+        else if(this.r < 0.1) {
+          this.speedX = 0;
+          this.speedY = -w/10;
+        }
+      } 
+      else if(this.neighbors[2] && this.neighbors[3]) {
+        this.r = random(1);
+        if(this.r < 0.5) {
+          this.speedX = w/10;
+          this.speedY = 0;
+        } 
+        else {
+          this.speedX = 0;
+          this.speedY = -w/10;
+        }
+        //if 1 neighbor is a wall
+      }
+      else if(this.neighbors[0]) {
+        this.r = random(1);
+        if(this.r < 0.333) {
+          this.speedX = w/10;
+          this.speedY = 0;
+        } 
+        else if(this.r < 0.667) {
+          this.speedX = -w/10;
+          this.speedY = 0;
+        }
+        else {
+          this.speedX = 0;
+          this.speedY = w/10;
+        }
+      } 
+      else if(this.neighbors[1]) {
+        this.r = random(1);
+        if(this.r < 0.333) {
+          this.speedX = 0;
+          this.speedY = w/10;
+        } 
+        else if(this.r < 0.667) {
+          this.speedX = 0;
+          this.speedY = -w/10;
+        } 
+        else {
+          this.speedX = -w/10;
+          this.speedY = 0;
+        }
+      } 
+      else if(this.neighbors[2]) {
+        this.r = random(1);
+        if(this.r < 0.333) {
+          this.speedX = w/10;
+          this.speedY = 0;
+        } 
+        else if(this.r < 0.667) {
+          this.speedX = -w/10;
+          this.speedY = 0;
+        }
+        else {
+          this.speedX = 0;
+          this.speedY = -w/10;
+        }
+      } 
+      else if(this.neighbors[3]) {
+        this.r = random(1);
+        if(this.r < 0.333) {
+          this.speedX = 0;
+          this.speedY = w/10;
+        } 
+        else if(this.r < 0.667) {
+          this.speedX = 0;
+          this.speedY = -w/10;
+        } 
+        else {
+          this.speedX = w/10;
+          this.speedY = 0;
+        }
+        //if there are no neighbor walls
+      } 
+      else {
+        this.r = random(1);
+        if(this.r < 0.25) {
+          this.speedX = w/10;
+          this.speedY = 0;
+        } 
+        else if(this.r < 0.5) {
+          this.speedX = -w/10;
+          this.speedY = 0;
+        } 
+        else if(this.r < 0.75) {
+          this.speedX = 0;
+          this.speedY = w/10;  
+        } 
+        else {
+          this.speedX = 0;
+          this.speedY = -w/10;
+        }
+      }
+      
+    }
+    if(this.x < -w/2) {
+      this.x = width + w/2;
+    }
+    if(this.x > width + w/2) {
+      this.x = -w/2;
+    }
+    if(this.y < -w/2) {
+      this.y = height + w/2;
+    }
+    if(this.y >height + w/2) {
+      this.y = -w/2;
+    }
+    this.x += this.speedX;
+    this.y += this.speedY;
+  }
 }
