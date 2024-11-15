@@ -18,354 +18,235 @@
 // coded most of the class stuff before ot was shown in class and I've been playinf aroufdn wiht it in my other projects as well.
 
 
-let pac;
-let grid = [];
-let rows, cols;
-const w = 20; //cell length (standard w = 10)
-let speedX = 0;
-let speedY = 0;
-let totalScore = 0;
-let p;
+let rows = 15;
+let cols = 15;
+let gridSize = 40;
+
+// Game objects
+let pacman;
+let game;
 let ghosts = [];
-let ghostNum = 4;
-let r;
-let thetaoff = 0;
-let dir; //equals 0 if up arrow is pressed, 1 if right arrow is pressed, 2 if down arrow is pressed, 3 if left arrow is pressed
-let neighbors = [];
-let pacImg;
+let pacmanFrameRateDivider = 10; // Slows down Pac-Man's movement
+let ghostFrameRateDivider = 30; // Slows down Ghosts' movement
 
-function setup() {
-  createCanvas(windowWidth, windowHeight);
-}
-
-function draw() {
-  background(220);
-}
-
-// load the pacman image
-function preload(){
-  pacImg = loadImage("pac.img");
-  font = loadFont("Pacmania.otf");
-}
-
-// will see if the keys are pressed and will help pac move
-function keyPressed() {
-  if (key === "w") {
-    //move up
-    movePac(pac.x, pac.y - 1);
-  }
-  if (key === "s") {
-    //move down
-    movePac(pac.x, pac.y + 1);
-  }
-  if (key === "d") {
-    //move right
-    movePac(pac.x + 1, pac.y);
-  }
-  if (key === "a") {
-    //move left
-    movePac(pac.x - 1, pac.y);
-  }
-}
-
-// the class for the the cells, each "square" counts as one cell 
-class Cell {
+// Pac-Man class
+class Pacman {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.wall = false; //is this cell a wall?
-    this.score = false; // does this cell increase the tootal score?
-    this.power = false; // is this cell a power token?
-    this.time = 0;
+    this.dirX = 0;
+    this.dirY = 0;
   }
-  
-  show() {
-    if(this.wall === true) {
-      fill(150, 100);
-      rect(this.x, this.y, w, w);
-      this.score = false;
-    }
-    else if(this.score) {
-      fill(225, 120, 0);
-      ellipse(this.x, this.y, w/5);
-    }
-    if(this.power) {
-      fill(225, 120, 0);
-      if(this.time % 45 < 15) {
-        fill(0);
-      }
-      ellipse(this.x, this.y, w/2);
-      this.time++;
-      if(this.time === 4500) {
-        this.time  = 0;
+
+  move(grid) {
+    let newX = this.x + this.dirX;
+    let newY = this.y + this.dirY;
+
+    // Check if the new position is not a wall
+    if (grid[newY][newX] !== 1) {
+      this.x = newX;
+      this.y = newY;
+
+      // Eat the dot
+      if (grid[this.y][this.x] === 0) {
+        grid[this.y][this.x] = -1; // Mark as eaten
       }
     }
   }
-  
-  total() {
-    if(this.score) {
-      let d = dist(pacman.x, pacman.y, this.x, this.y);
-      if(d < w/2) {
-        totalScore++;
-        this.score  = false;
-      }
-    }
-    if(this.power) {
-      let d = dist(pacman.x, pacman.y, this.x, this.y);
-      if(d < w/2) {
-        totalScore++;
-        let time = 6000;
-        this.power = false;
-        for(let i = 0; i < ghostNum; i++) {
-          ghosts[i].killable = true;
-          setTimeout(ghostInv, time);
-        }
-      }
-    }
+
+  draw() {
+    fill(255, 255, 0);
+    ellipse(
+      this.x * gridSize + gridSize / 2,
+      this.y * gridSize + gridSize / 2,
+      gridSize * 0.8
+    );
   }
 }
 
-// the class for the ghosts
+// Ghost class
 class Ghost {
-  constructor(x, y, diameter) {
-    this.i = 0;
+  constructor(x, y, color) {
     this.x = x;
     this.y = y;
-    this.d = diameter;
-    this.r1 = 0;
-    this.speedX = 0;
-    this.speedY = 0;
-    this.killable = false;
-    this.alive = true;
-    this.neighbors = [];
-    this.i++;
+    this.color = color;
   }
-  
-  show(r, g, b) {
-    if(this.alive === false) {
+
+  move(grid, pacmanX, pacmanY) {
+    let possibleMoves = [];
+
+    // Check all possible moves
+    if (grid[this.y - 1][this.x] !== 1) possibleMoves.push({ x: this.x, y: this.y - 1 });
+    if (grid[this.y + 1][this.x] !== 1) possibleMoves.push({ x: this.x, y: this.y + 1 });
+    if (grid[this.y][this.x - 1] !== 1) possibleMoves.push({ x: this.x - 1, y: this.y });
+    if (grid[this.y][this.x + 1] !== 1) possibleMoves.push({ x: this.x + 1, y: this.y });
+
+    // Pick the move that brings the ghost closer to Pac-Man
+    let bestMove = possibleMoves[0];
+    let bestDistance = dist(bestMove.x, bestMove.y, pacmanX, pacmanY);
+
+    for (let move of possibleMoves) {
+      let d = dist(move.x, move.y, pacmanX, pacmanY);
+      if (d < bestDistance) {
+        bestMove = move;
+        bestDistance = d;
+      }
     }
-    else if(this.killable) {
-      fill(0, 0, 255);
-      rect(this.x, this.y, this.d, this.d, 5);
-    }
-    else {
-      fill(r, g, b);
-      rect(this.x, this.y, this.d, this.d, 5);
-    }
+
+    // Update position
+    this.x = bestMove.x;
+    this.y = bestMove.y;
   }
-  
-  
-  kill() {
-    let d = dist(pacman.x, pacman.y, this.x, this.y);
-    if(d < w/2) {
-      if(this.alive) {
-        if(this.killable) {
-          this.alive = false;
-          totalScore += 50;
-          // YUP SO PLS FIX  THIS PART BECAUSE IM CRASHING OUT RNNNN
-          setTimeout(() => { 
-            this.x = floor(random(11, 15))*w; 
-            this.y = floor(random(9, 11))*w;
-            this.alive = true;
-          }, 7000); //IM BEGGING PLSSSSSS FIX GIRL.
-        } 
-        else {
-          deathPac(); // awwwww bye pac :( #byeho
+
+  draw() {
+    fill(this.color);
+    ellipse(
+      this.x * gridSize + gridSize / 2,
+      this.y * gridSize + gridSize / 2,
+      gridSize * 0.8
+    );
+  }
+}
+
+// Game class
+class Game {
+  constructor(rows, cols) {
+    this.rows = rows;
+    this.cols = cols;
+    this.grid = [];
+    this.won = false;
+    this.lost = false;
+    this.initGrid();
+  }
+
+  initGrid() {
+    for (let y = 0; y < this.rows; y++) {
+      this.grid[y] = [];
+      for (let x = 0; x < this.cols; x++) {
+        if (x === 0 || y === 0 || x === this.cols - 1 || y === this.rows - 1 || random() < 0.2) {
+          this.grid[y][x] = 1; // Wall
+        } else {
+          this.grid[y][x] = 0; // Dot
+        }
+      }
+    }
+    this.grid[pacman.y][pacman.x] = 0; // Clear Pac-Man's starting position
+  }
+
+  drawGrid() {
+    for (let y = 0; y < this.rows; y++) {
+      for (let x = 0; x < this.cols; x++) {
+        if (this.grid[y][x] === 1) {
+          fill(50, 50, 200); // Wall
+          rect(x * gridSize, y * gridSize, gridSize, gridSize);
+        } else if (this.grid[y][x] === 0) {
+          fill(200, 200, 0); // Dot
+          ellipse(
+            x * gridSize + gridSize / 2,
+            y * gridSize + gridSize / 2,
+            gridSize / 4
+          );
         }
       }
     }
   }
 
-  move() {  
-    if(this.x % w === 0 && this.y % w === 0){
-      checkNeighbors(this.x, this.y, this.neighbors);
-      //it's probably a dumb way of making the ghosts move, but I divided the move function into all the possible neighbors cells of the ghost
-      //if all neighbors are walls (technically this is not needed)
-      if(this.neighbors[0] && this.neighbors[1] && this.neighbors[2] && this.neighbors[3]) {
-        this.speedX = 0;
-        this.speedY = 0;
-      //if 3 neighbors are walls (technically this is not needed)
-      } else if(this.neighbors[0] && this.neighbors[1] && this.neighbors[2]) {
-        this.speedX = -w/10;
-        this.speedY = 0;
-      } 
-      else if(this.neighbors[0] && this.neighbors[1] && this.neighbors[3]) {
-        this.speedX = 0;
-        this.speedY = w/10;
-      } 
-      else if(this.neighbors[0] && this.neighbors[2] && this.neighbors[3]) {
-        this.speedX = w/10;
-        this.speedY = 0;
-      } 
-      else if(this.neighbors[3] && this.neighbors[1] && this.neighbors[2]) {
-        this.speedX = 0;
-        this.speedY = -w/10;
-        //if 2 neighbors are walls
-      } 
-      else if(this.neighbors[0] && this.neighbors[1]) {
-        this.r = random(1);
-        if(this.r < 0.5) {
-          this.speedX = -w/10;
-          this.speedY = 0;
-        } 
-        else {
-          this.speedX = 0;
-          this.speedY = w/10;
-        }
-      } 
-      else if(this.neighbors[0] && this.neighbors[2]) {
-        this.r = random(1);
-        //if the ghost is between 2 parallel walls, theres a little chance of 5% that it will change its direction
-        if(this.r < 0.05) {
-          this.speedX = w/10;
-          this.speedY = 0;
-        } 
-        else if(this.r < 0.1) {
-          this.speedX = -w/10;
-          this.speedY = 0;
-        }
-      } 
-      else if(this.neighbors[0] && this.neighbors[3]) {
-        this.r = random(1);
-        if(this.r < 0.5) {
-          this.speedX = w/10;
-          this.speedY = 0;
-        } 
-        else {
-          this.speedX = 0;
-          this.speedY = w/10;
-        }
-      } 
-      else if(this.neighbors[1] && this.neighbors[2]) {
-        this.r = random(1);
-        if(this.r < 0.5) {
-          this.speedX = 0;
-          this.speedY = -w/10;
-        } 
-        else {
-          this.speedX = -w/10;
-          this.speedY = 0;
-        }
-      } 
-      else if(this.neighbors[1] && this.neighbors[3]) {
-        this.r = random(1);
-        //if the ghost is between 2 parallel walls, theres a little chance of 5% that it will change its direction
-        if(this.r < 0.05) {
-          this.speedX = 0;
-          this.speedY = w/10;
-        } 
-        else if(this.r < 0.1) {
-          this.speedX = 0;
-          this.speedY = -w/10;
-        }
-      } 
-      else if(this.neighbors[2] && this.neighbors[3]) {
-        this.r = random(1);
-        if(this.r < 0.5) {
-          this.speedX = w/10;
-          this.speedY = 0;
-        } 
-        else {
-          this.speedX = 0;
-          this.speedY = -w/10;
-        }
-        //if 1 neighbor is a wall
-      }
-      else if(this.neighbors[0]) {
-        this.r = random(1);
-        if(this.r < 0.333) {
-          this.speedX = w/10;
-          this.speedY = 0;
-        } 
-        else if(this.r < 0.667) {
-          this.speedX = -w/10;
-          this.speedY = 0;
-        }
-        else {
-          this.speedX = 0;
-          this.speedY = w/10;
-        }
-      } 
-      else if(this.neighbors[1]) {
-        this.r = random(1);
-        if(this.r < 0.333) {
-          this.speedX = 0;
-          this.speedY = w/10;
-        } 
-        else if(this.r < 0.667) {
-          this.speedX = 0;
-          this.speedY = -w/10;
-        } 
-        else {
-          this.speedX = -w/10;
-          this.speedY = 0;
-        }
-      } 
-      else if(this.neighbors[2]) {
-        this.r = random(1);
-        if(this.r < 0.333) {
-          this.speedX = w/10;
-          this.speedY = 0;
-        } 
-        else if(this.r < 0.667) {
-          this.speedX = -w/10;
-          this.speedY = 0;
-        }
-        else {
-          this.speedX = 0;
-          this.speedY = -w/10;
-        }
-      } 
-      else if(this.neighbors[3]) {
-        this.r = random(1);
-        if(this.r < 0.333) {
-          this.speedX = 0;
-          this.speedY = w/10;
-        } 
-        else if(this.r < 0.667) {
-          this.speedX = 0;
-          this.speedY = -w/10;
-        } 
-        else {
-          this.speedX = w/10;
-          this.speedY = 0;
-        }
-        //if there are no neighbor walls
-      } 
-      else {
-        this.r = random(1);
-        if(this.r < 0.25) {
-          this.speedX = w/10;
-          this.speedY = 0;
-        } 
-        else if(this.r < 0.5) {
-          this.speedX = -w/10;
-          this.speedY = 0;
-        } 
-        else if(this.r < 0.75) {
-          this.speedX = 0;
-          this.speedY = w/10;  
-        } 
-        else {
-          this.speedX = 0;
-          this.speedY = -w/10;
+  checkWin() {
+    // Check if there are any dots left
+    for (let y = 0; y < this.rows; y++) {
+      for (let x = 0; x < this.cols; x++) {
+        if (this.grid[y][x] === 0) {
+          return false;
         }
       }
-      
     }
-    if(this.x < -w/2) {
-      this.x = width + w/2;
+    this.won = true;
+    return true;
+  }
+
+  checkLose() {
+    // Check if any ghost caught Pac-Man
+    for (let ghost of ghosts) {
+      if (ghost.x === pacman.x && ghost.y === pacman.y) {
+        this.lost = true;
+        return true;
+      }
     }
-    if(this.x > width + w/2) {
-      this.x = -w/2;
+    return false;
+  }
+}
+
+function setup() {
+  createCanvas(cols * gridSize, rows * gridSize);
+  pacman = new Pacman(1, 1);
+  game = new Game(rows, cols);
+
+  // Create ghosts
+  ghosts.push(new Ghost(cols - 2, rows - 2, color(255, 0, 0)));
+  ghosts.push(new Ghost(cols - 2, 1, color(0, 255, 0)));
+}
+
+function draw() {
+  if (game.won) {
+    background(0);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(32);
+    text("You Won!", width / 2, height / 2);
+    noLoop(); // Stop the game loop
+    return;
+  }
+
+  if (game.lost) {
+    background(0);
+    fill(255, 0, 0);
+    textAlign(CENTER, CENTER);
+    textSize(32);
+    text("You Lose!", width / 2, height / 2);
+    noLoop(); // Stop the game loop
+    return;
+  }
+
+  background(0);
+
+  game.drawGrid();
+
+  if (frameCount % pacmanFrameRateDivider === 0) {
+    pacman.move(game.grid);
+  }
+
+  if (frameCount % ghostFrameRateDivider === 0) {
+    for (let ghost of ghosts) {
+      ghost.move(game.grid, pacman.x, pacman.y);
     }
-    if(this.y < -w/2) {
-      this.y = height + w/2;
-    }
-    if(this.y >height + w/2) {
-      this.y = -w/2;
-    }
-    this.x += this.speedX;
-    this.y += this.speedY;
+  }
+
+  pacman.draw();
+  for (let ghost of ghosts) {
+    ghost.draw();
+  }
+
+  if (game.checkWin()) {
+    game.won = true;
+  }
+
+  if (game.checkLose()) {
+    game.lost = true;
+  }
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    pacman.dirX = 0;
+    pacman.dirY = -1;
+  } else if (keyCode === DOWN_ARROW) {
+    pacman.dirX = 0;
+    pacman.dirY = 1;
+  } else if (keyCode === LEFT_ARROW) {
+    pacman.dirX = -1;
+    pacman.dirY = 0;
+  } else if (keyCode === RIGHT_ARROW) {
+    pacman.dirX = 1;
+    pacman.dirY = 0;
   }
 }
