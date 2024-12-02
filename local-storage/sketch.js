@@ -1,12 +1,14 @@
-// Cherry
-
+// LocalStorage Demo
 
 let numberOfClicks = 0;
 let highestClick = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  highestclick = getItem("highest");
+  //only get the highest value if it exists...
+  if (getItem("highest")) {
+    highestClick = getItem("highest");
+  }
 }
 
 function draw() {
@@ -15,23 +17,22 @@ function draw() {
   displayHighest();
 }
 
-
 function mousePressed() {
   numberOfClicks++;
-  if(numberOfClicks > highestClick){
-    highestClick = numberOfClicks; 
+  if (numberOfClicks > highestClick) {
+    highestClick = numberOfClicks;
     storeItem("highest", highestClick);
   }
 }
 
-function displayClicks(){
+function displayClicks() {
   fill("black");
-  textSize(75);
+  textSize(50);
   text(numberOfClicks, 100, height/2);
 }
 
-function displayHighest(){
+function displayHighest() {
   fill("green");
-  textSize(75);
+  textSize(50);
   text(highestClick, 400, height/2);
 }
