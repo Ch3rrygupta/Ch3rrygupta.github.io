@@ -17,6 +17,8 @@
 - [Character Grid](character-grid)
 - [walker OOP](walker-oop)
 - [Fireworks OOP](fireworks-oop)
+- [Connective Nodes OOP](nodes)
+- [collide 2D](collide)
 
 
 ## Projects 
