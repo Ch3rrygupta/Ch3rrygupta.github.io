@@ -20,6 +20,7 @@
 - [Connective Nodes OOP](nodes)
 - [collide 2D](collide)
 - [local storage demo](local-storage)
+- [Inheritance](inheritance)
 
 
 ## Projects 
